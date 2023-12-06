@@ -40,10 +40,6 @@ To use the tool, follow these steps:
 
 If you would like to contribute to the project, feel free to fork and submit a pull request.
 
-## Contact
-
-For questions or feedback, please contact [Michael](mailto:michaelkingmbro@gmail.com).
-
 ## Dependencies
 
 - beautifulsoup4==4.10.0
