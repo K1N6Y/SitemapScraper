@@ -1,4 +1,4 @@
-# AIO or Yoast SEO Sitemap URL Scraper
+# SEO Sitemap URL Scraper
 
 This tool allows users to scrape all URLs from multi-level sitemaps. It uses BeautifulSoup to grab Meta Descriptions and Titles from the pages and exports it to a CSV.
 
