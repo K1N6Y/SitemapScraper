@@ -23,7 +23,6 @@ def extract_title_and_description(url):
     except Exception as e:
         return f"Error: {e}", None
 
-# Function to scrape internal URLs from a sitemap
 def scrape_internal_urls_from_sitemap(sitemap_url):
     try:
         response = requests.get(sitemap_url)
@@ -40,18 +39,27 @@ def scrape_internal_urls_from_sitemap(sitemap_url):
         if not sitemap_urls:  # If no sub-sitemaps, directly scrape URLs from the main sitemap
             urls = sitemap_dict.get('urlset', {}).get('url', [])
             internal_urls = [url['loc'] for url in urls if is_internal_url(main_domain, url['loc'])]
+            
         else:
             for sitemap_url_info in tqdm(sitemap_urls, desc="Processing Sub-Sitemaps", unit=" Sub-Sitemap"):
                 sub_sitemap_url = sitemap_url_info.get('loc')
-                
+
                 try:
                     sub_sitemap_response = requests.get(sub_sitemap_url)
                     sub_sitemap_response.raise_for_status()
 
                     sub_sitemap_dict = xmltodict.parse(sub_sitemap_response.content)
                     urls = sub_sitemap_dict.get('urlset', {}).get('url', [])
-                    sub_sitemap_internal_urls = [url['loc'] for url in urls if is_internal_url(main_domain, url['loc'])]
-                    
+
+                    sub_sitemap_internal_urls = []
+                    if isinstance(urls, list):
+                        for url in urls:
+                            if is_internal_url(main_domain, url['loc']):
+                                sub_sitemap_internal_urls.append(url['loc'])
+                    elif isinstance(urls, dict):
+                        if is_internal_url(main_domain, urls.get('loc')):
+                            sub_sitemap_internal_urls.append(urls['loc'])
+
                     internal_urls.extend(sub_sitemap_internal_urls)
                 except Exception as e:
                     print(f"Error scraping internal URLs from sub-sitemap {sub_sitemap_url}: {e}")
